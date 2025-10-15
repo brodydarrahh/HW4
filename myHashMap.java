@@ -1,5 +1,5 @@
 /*
- * *** YOUR NAME GOES HERE / YOUR SECTION NUMBER ***
+ * *** BRODY DARRAH / COMP 272 SECTION 002 ***
  *
  * This hashMap object represents an over simplification of Java's implementation of HashMap within
  * Java's Collection Framework Library. You are to complete the following methods:
@@ -231,6 +231,35 @@ class myHashMap<K,V> {
          * return value is returned the invoking function based on the remove outcome.
          */
 
+
+        int index = getBucketIndex(key);
+        // Get the bucket index for the key
+        HashNode<K, V> head = bucket.get(index);
+
+        // Prev must unlink the node if it's in the middle or end
+        HashNode<K, V> prev = null;
+
+        // Walk the linked list in the bucket
+        while (head != null) {
+            if (head.key.equals(key)) {
+                V removedValue = head.value; // save value before deleting
+
+                if (prev == null) {
+                    // if it's in the first node in the chain, move head forward
+                    bucket.set(index, head.next);
+                } else {
+                    // otherwise bypass the node
+                    prev.next = head.next;
+                }
+
+                size--; //shrink size count
+                return removedValue;
+            }
+            // Move prev forward, then move head forward.
+            prev = head;
+            head = head.next;
+        }
+        // Return null if nothing found
         return null;
     }
 
@@ -289,7 +318,7 @@ class myHashMap<K,V> {
          * then replace the value, else insert the <key,value>
          */
         V oldValue = get(key);
-        if ( oldValue != null) {
+        if (oldValue != null) {
             replace(key, value);
             return oldValue;
         }
@@ -406,7 +435,20 @@ class myHashMap<K,V> {
          * replace (see method's prologue above).
          */
 
-        return val;
+        // Get the bucket and traverse linked list
+        int index = getBucketIndex(key);
+        HashNode<K, V> head = bucket.get(index);
+
+        while (head != null){
+            if (head.key.equals(key)){
+                V old = head.value; //store old value
+                head.value = val; // overwrite w new value
+                return old; //return old one
+            }
+            head = head.next;
+        }
+        // If key not found, just return null
+        return null;
     }
 
     
@@ -434,6 +476,14 @@ class myHashMap<K,V> {
          * value 'oldval', and is so, it SHOULD call replace(K, V) for code reuse.
          */
 
+
+        // Check if the current value matches oldVal first
+        V current = get(key);
+        if (current != null && current.equals(oldVal)){
+            replace(key, newVal);
+            return true;
+        }
+        // otherwise, no match or no key
         return false;
     }
 

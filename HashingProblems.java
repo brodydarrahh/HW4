@@ -1,5 +1,5 @@
 /*
- * *** YOUR NAME GOES HERE / YOUR SECTION NUMBER ***
+ * *** BRODY DARRAH / COMP 272 SECTION 002 ***
  *
  * This HashingProblems object contains three methods / problems that you must
  * complete utilize the HashMap object within the Java's Collection Framework Library.
@@ -41,8 +41,28 @@ class HashingProblems {
          * returning 0.0/0.0 IS correct (which would return a non-number).
          */
 
-         return 0.0 / 0.0;
-  }
+        // Iterate array once, only add values for keys that exist in map
+        // Keep a running sum and count of how many patched keys I included
+        // If count == 0, return 0.0/0.0 to give NaN
+        int sum = 0;
+        int count = 0;
+
+        for (int key : array) {
+            Integer val = map.get(key);
+            if (val != null){
+                //running sum&count
+                sum += val;
+                count++;
+            }
+        }
+
+        // Average of an empty set should be NaN
+        if (count == 0){
+            return 0.0/0.0;
+        }
+        // Cast for division
+        return sum / (double) count;
+    }
 
 
     /*
@@ -61,6 +81,16 @@ class HashingProblems {
        *
        * Hint: Consider iterating over the HashMap using the keySet method.
        */
+
+      // Make a set of keys
+      Set<Integer> keys = map.keySet();
+
+      // Loop through the set and check for odd keys
+      for (int key : keys){
+          if (key % 2 != 0){
+              result.add(map.get(key)); // get value for the odd key
+          }
+      }
 
 
       return result;
@@ -110,7 +140,25 @@ class HashingProblems {
        * ADD YOUR CODE HERE
        */
 
-      return -1;
+      // Use a HashSet to get fast lookups
+      HashSet<Integer> set = new HashSet<>();
+
+      // Dump everything in the set
+      for (int x : numbers){
+          set.add(x);
+      }
+
+      int count = 0;
+
+      // Check for (x+k)
+      for (int x : numbers){
+          if (set.contains(x + k)){
+              count++; // pair found
+          }
+      }
+
+      // how many pairs had difference k
+      return count;
   }
 
 } /* end class HashingProblems */
